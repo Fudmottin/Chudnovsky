@@ -76,7 +76,6 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // Ensure input is valid
     try {
         uint32_t num_terms = std::stoi(argv[1]);
         
@@ -85,10 +84,10 @@ int main(int argc, char* argv[]) {
         }
  
         int precision = calcPrecision(num_terms);
-        boost::multiprecision::mpfr_float constant = calcConstant(precision);
-        
+
         using boost::multiprecision::mpfr_float;
-      
+        
+        mpfr_float constant = calcConstant(precision);
         mpfr_float pi_inverse = 0; // Initialize inverse of Pi
           
         for(uint32_t k=0; k < num_terms; ++k) {
