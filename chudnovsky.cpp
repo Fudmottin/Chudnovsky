@@ -44,8 +44,6 @@ boost::multiprecision::cpp_int pow_3k(uint32_t k) {
     for (uint32_t i = 0; i < exponent; ++i)
         ret *= base;
 
-    if ((k & 1) == 1) ret = 0 - ret;
-
     return ret;
 }
 
@@ -99,7 +97,6 @@ int main(int argc, char* argv[]) {
           
         mpfr_float pi = 1/(pi_inverse * 12);
         
-        std::cout << "Pi computed up to " << num_terms << " terms is: ";
         std::cout << std::setprecision(precision) << pi << "\n";
     } catch(std::exception& e){
         std::cerr << "Error: " << e.what() << "\n";
