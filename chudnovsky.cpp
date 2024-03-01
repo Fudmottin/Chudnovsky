@@ -12,7 +12,6 @@
 #include <cmath>
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/math/constants/constants.hpp>
-#include <boost/math/special_functions/factorials.hpp>
 #include <boost/multiprecision/mpfr.hpp>
 
 
