@@ -15,6 +15,8 @@
 
 using boost::multiprecision::cpp_int;
 
+static const int log2n = 4;
+
 cpp_int factorial(cpp_int num) {
     cpp_int fact = 1;
     for(cpp_int i = 1; i <= num; ++i)
@@ -53,7 +55,7 @@ int calcPrecision(int num_terms) {
 // Function to calculate multiple of sigma series with required precision
 boost::multiprecision::mpfr_float calcConstant(int precision){
     using boost::multiprecision::mpfr_float;
-    mpfr_float::default_precision(precision);
+    mpfr_float::default_precision(precision * log2n);
     mpfr_float numerator = 1;
     mpfr_float denominator_a = 426880;
     mpfr_float denominator_b_squared = 10005;
@@ -79,7 +81,7 @@ int main(int argc, char* argv[]) {
 
         using boost::multiprecision::mpfr_float;
         
-        mpfr_float::default_precision(precision);
+        mpfr_float::default_precision(precision * log2n);
         mpfr_float constant = calcConstant(precision);
         mpfr_float pi_inverse = 0;
           
