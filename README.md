@@ -88,3 +88,9 @@ Displaying ten characters from each file starting five chars before the differen
 $ wc -c pi.txt                  
     3002 pi.txt
 ```
+As you can see, there is a point where the digits are start to be just plain wrong.
+that's just the nature of this implementation. Still, it was fun to write. Debugging
+was a bit of a challenge. Integer overflows do terrible things! If you follow the
+link to the wikipedia page, you will see that there is more room for optimization.
+Not only can the number of operations be reduced, the algorithm can be parallelized
+to take advantage of multiple cores.
