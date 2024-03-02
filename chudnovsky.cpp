@@ -11,7 +11,6 @@
 #include <string>
 #include <cmath>
 #include <boost/multiprecision/cpp_int.hpp>
-#include <boost/math/constants/constants.hpp>
 #include <boost/multiprecision/mpfr.hpp>
 
 
@@ -61,7 +60,7 @@ int calcPrecision(int num_terms) {
     return estimated_precision;
 }
 
-// Function to calculate (640320)^(3/2) with desired precision
+// Function to calculate multiple of sigma series with required precision
 boost::multiprecision::mpfr_float calcConstant(int precision){
     using boost::multiprecision::mpfr_float;
     mpfr_float::default_precision(precision);
@@ -90,14 +89,15 @@ int main(int argc, char* argv[]) {
 
         using boost::multiprecision::mpfr_float;
         
+        mpfr_float::default_precision(precision);
         mpfr_float constant = calcConstant(precision);
-        mpfr_float pi_inverse = 0; // Initialize inverse of Pi
+        mpfr_float pi_inverse = 0;
           
         for(uint32_t k=0; k < num_terms; ++k) {
             pi_inverse += mpfr_float(numerator(k)) / mpfr_float(denominator_a(k) * pow_3k(k));
         }
           
-        mpfr_float pi = 1/(pi_inverse * constant);
+        mpfr_float pi = mpfr_float(1)/(pi_inverse * constant);
         
         std::cout << std::setprecision(precision) << pi << "\n";
     } catch(std::exception& e){
