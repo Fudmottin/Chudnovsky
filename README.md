@@ -52,15 +52,39 @@ to compare the output of chudnovsky to the canonical π text to see where disagr
 begins.
 
 ```
-$ time ./chudnovsky 25 > pi.txt
-./chudnovsky 25 > pi.txt  0.00s user 0.00s system 71% cpu 0.007 total
-$ sh pi-diff.sh
+./chudnovsky 50 > pi.txt  0.00s user 0.00s system 75% cpu 0.007 total
+$ sh pi-diff.sh                                                                    
 cmp: EOF on pi.txt
-Difference found at position: 115
+Difference found at position: 711
 Displaying ten characters from each file starting five chars before the difference...
-           5   1   3   2   8   2   3   0   6   6
+           9   9   5   6   1   1   2   1   2   9                        
 
-           5   1   3   2   9   5   7   3   2   9
+           9   9   5   6   2   4   3   8   6   5                        
 
-$
+$ wc -c pi.txt 
+     752 pi.txt
+$ time ./chudnovsky 100 > pi.txt
+./chudnovsky 100 > pi.txt  0.01s user 0.00s system 84% cpu 0.014 total
+$ sh pi-diff.sh                 
+cmp: EOF on pi.txt
+Difference found at position: 1421
+Displaying ten characters from each file starting five chars before the difference...
+           0   9   3   4   1   7   2   1   6   4                        
+
+           0   9   3   4   9   4   4   5   8   6                        
+
+$ wc -c pi.txt                  
+    1502 pi.txt
+$ time ./chudnovsky 200 > pi.txt
+./chudnovsky 200 > pi.txt  0.04s user 0.00s system 95% cpu 0.045 total
+$ sh pi-diff.sh                 
+cmp: EOF on pi.txt
+Difference found at position: 2838
+Displaying ten characters from each file starting five chars before the difference...
+           8   4   7   8   4   8   9   6   8   3                        
+
+           8   4   7   8   5   2   7   1   0   4                        
+
+$ wc -c pi.txt                  
+    3002 pi.txt
 ```
