@@ -47,17 +47,9 @@ boost::multiprecision::cpp_int pow_3k(uint32_t k) {
 }
 
 int calcPrecision(int num_terms) {
-    const int MIN_PRECISION = 6; // At least six significant figures.
-    const int PLACES_PER_TERM = 14; // Each term adds about 14 correct decimal places.
+    const int PLACES_PER_TERM = 15;
 
-    int estimated_precision = num_terms * PLACES_PER_TERM;
-
-    // Ensure at least minimum precision.
-    if (estimated_precision < MIN_PRECISION) {
-        return MIN_PRECISION;
-    }
-
-    return estimated_precision;
+    return num_terms * PLACES_PER_TERM;
 }
 
 // Function to calculate multiple of sigma series with required precision
