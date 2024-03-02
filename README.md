@@ -25,7 +25,7 @@ It will compute Pi up to 10 terms.
 The output will display Pi computed up to `n` terms (where `n` was your input) and then print out a calculated approximation of Pi.
 
 ## Algorithm Explanation
-The Chudnovky algorithm calculates 1/π as:
+The Chudnovsky algorithm calculates 1/π as:
 
 ![12 Σ ((-1)^k * (6k)! * (545140134k + 13591409)) / ((3k)!(k!)^3 * (640320)^(3k+3/2))](https://github.com/Fudmottin/Chudnovsky/blob/main/chudnovsky.svg)
 
