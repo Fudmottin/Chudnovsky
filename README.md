@@ -39,3 +39,28 @@ Remember that the more terms you use, the more accurate your calculation will be
 
 This program is a great way to understand how numerical methods work and how C++ can be used for scientific computing tasks. Feel free to experiment with it and optimize it as needed!
 
+## Addendum
+
+```
+Pi-1000000.txt
+pi-diff.sh
+```
+
+These files are for testing the output for correctness. The Pi-1000000.txt file is
+the first million digits of π in a single line of text. The shell script is intended
+to compare the output of chudnovsky to the canonical π text to see where disagreement
+begins.
+
+```
+$ time ./chudnovsky 25 > pi.txt
+./chudnovsky 25 > pi.txt  0.00s user 0.00s system 71% cpu 0.007 total
+$ sh pi-diff.sh
+cmp: EOF on pi.txt
+Difference found at position: 115
+Displaying ten characters from each file starting five chars before the difference...
+           5   1   3   2   8   2   3   0   6   6
+
+           5   1   3   2   9   5   7   3   2   9
+
+$
+```

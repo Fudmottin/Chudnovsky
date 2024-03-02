@@ -2,7 +2,7 @@
 
 # Define the two files
 file1="Pi-1000000.txt"
-file2="Chudnovsky/pi.txt"
+file2="pi.txt"
 
 # Use cmp to find the byte position of the first difference
 diff_pos=$(cmp -l $file1 $file2 | awk 'NR==1{print $1}')
