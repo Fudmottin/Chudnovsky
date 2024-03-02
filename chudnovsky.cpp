@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
         mpfr_float pi_inverse = 0; // Initialize inverse of Pi
           
         for(uint32_t k=0; k < num_terms; ++k) {
-            pi_inverse += mpfr_float(numerator(k)) / (mpfr_float(denominator_a(k)) * mpfr_float(pow_3k(k)));
+            pi_inverse += mpfr_float(numerator(k)) / mpfr_float(denominator_a(k) * pow_3k(k));
         }
           
         mpfr_float pi = 1/(pi_inverse * constant);
