@@ -13,34 +13,32 @@
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/multiprecision/mpfr.hpp>
 
+using boost::multiprecision::cpp_int;
 
-boost::multiprecision::cpp_int factorial(uint32_t num) {
-    using boost::multiprecision::cpp_int;
+cpp_int factorial(int64_t num) {
     cpp_int fact = 1;
     for(cpp_int i = 1; i <= num; ++i)
         fact *= i;
     return fact;
 }
 
-boost::multiprecision::cpp_int numerator(uint32_t k) {
-    using boost::multiprecision::cpp_int;
-    
+cpp_int numerator(int64_t k) {
     auto six_k_fact = factorial(6*k);
     
     return (k & 1 ? -1 : 1) * six_k_fact * (545140134*k + 13591409);
 }
 
-boost::multiprecision::cpp_int denominator_a(uint32_t k) {
+cpp_int denominator_a(int64_t k) {
     auto factorial_k = factorial(k);
     return factorial(3*k) * factorial_k * factorial_k * factorial_k;
 }
 
-boost::multiprecision::cpp_int pow_3k(uint32_t k) {
-    boost::multiprecision::cpp_int base = 640320;
-    boost::multiprecision::cpp_int ret = 1;
-    uint32_t exponent = 3 * k;
+cpp_int pow_3k(int64_t k) {
+    cpp_int base = 640320;
+    cpp_int ret = 1;
+    int64_t exponent = 3 * k;
 
-    for (uint32_t i = 0; i < exponent; ++i)
+    for (int64_t i = 0; i < exponent; ++i)
         ret *= base;
 
     return ret;
@@ -71,7 +69,7 @@ int main(int argc, char* argv[]) {
     }
 
     try {
-        uint32_t num_terms = std::stoi(argv[1]);
+        int64_t num_terms = std::stoi(argv[1]);
         
         if (num_terms <= 0) {
             throw std::invalid_argument("Number of terms must be greater than zero.");
@@ -85,7 +83,7 @@ int main(int argc, char* argv[]) {
         mpfr_float constant = calcConstant(precision);
         mpfr_float pi_inverse = 0;
           
-        for(uint32_t k=0; k < num_terms; ++k) {
+        for(int64_t k=0; k < num_terms; ++k) {
             pi_inverse += mpfr_float(numerator(k)) / mpfr_float(denominator_a(k) * pow_3k(k));
         }
           
