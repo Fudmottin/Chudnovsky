@@ -15,20 +15,20 @@
 
 using boost::multiprecision::cpp_int;
 
-cpp_int factorial(int64_t num) {
+cpp_int factorial(cpp_int num) {
     cpp_int fact = 1;
     for(cpp_int i = 1; i <= num; ++i)
         fact *= i;
     return fact;
 }
 
-cpp_int numerator(int64_t k) {
+cpp_int numerator(cpp_int k) {
     auto six_k_fact = factorial(6*k);
     
     return (k & 1 ? -1 : 1) * six_k_fact * (545140134*k + 13591409);
 }
 
-cpp_int denominator_a(int64_t k) {
+cpp_int denominator_a(cpp_int k) {
     auto factorial_k = factorial(k);
     return factorial(3*k) * factorial_k * factorial_k * factorial_k;
 }
