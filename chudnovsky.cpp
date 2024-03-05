@@ -10,6 +10,9 @@
 #include <iomanip>
 #include <string>
 #include <cmath>
+#include <mutex>
+#include <thread>
+#include <vector>
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/multiprecision/mpfr.hpp>
 
@@ -85,10 +88,24 @@ int main(int argc, char* argv[]) {
         mpfr_float constant = calcConstant(precision);
         mpfr_float pi_inverse = 0;
           
-        for(int64_t k=0; k < num_terms; ++k) {
-            pi_inverse += mpfr_float(numerator(k)) / mpfr_float(denominator_a(k) * pow_3k(k));
+        std::mutex mtx;
+        unsigned num_threads = std::thread::hardware_concurrency();
+        std::vector<std::thread> threads(num_threads);
+
+        for(unsigned i = 0; i < num_threads; ++i) {
+            threads[i] = std::thread([&, i] {
+                for(int64_t k = i; k < num_terms; k += num_threads) {
+                    mpfr_float temp = mpfr_float(numerator(k)) / mpfr_float(denominator_a(k) * pow_3k(k));
+                    mtx.lock(); 
+                    pi_inverse += temp;
+                    mtx.unlock(); 
+                }
+            });
         }
-          
+
+        for(auto& th : threads)
+            th.join();
+
         mpfr_float pi = mpfr_float(1)/(pi_inverse * constant);
         
         std::cout << std::setprecision(precision) << pi << "\n";
