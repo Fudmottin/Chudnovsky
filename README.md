@@ -10,11 +10,17 @@ The program requires two libraries:
 1. **Boost:** A set of peer-reviewed portable C++ source libraries that extend the functionality of C++. You can download it from [here](https://www.boost.org/users/download/). 
 2. **MPFR:** A library for multiple-precision floating-point computations with correct rounding. You can download it from [here](http://www.mpfr.org/mpfr-current/#download).
 
-Make sure to install these libraries before compiling and running the program.
+Make sure to install these libraries before compiling and running the program. Both packages are also available on [brew.sh](https://brew.sh).
 
 ## How To Compile The Program?
 You need a compiler that supports C++20 standard because this code uses features introduced in this version.
 Here is an example compile line: `c++ -std=c++20 -O3 -o chudnovsky chudnovsky.cpp -L/usr/local/opt/mpfr/lib/ -lmpfr`
+This was used on my i9 MacBook Pro.
+
+On an M2 Mac mini, I used the following line: `c++ -std=c++20 -O3 -I /opt/homebrew/include -L /opt/homebrew/lib -o chudnovsky chudnovsky.cpp -lmpfr`
+
+This is because HomeBrew installs packages on Intel based Macs differently than M* based Macs. Or perhaps it is because of
+Big Sur. Whatever. Who cares? It's different and it's annoying!
 
 ## Usage
 To run the program, you should pass one argument which is the number of terms to be computed in the series.
@@ -93,4 +99,5 @@ that's just the nature of this implementation. Still, it was fun to write. Debug
 was a bit of a challenge. Integer overflows do terrible things! If you follow the
 link to the wikipedia page, you will see that there is more room for optimization.
 Not only can the number of operations be reduced, the algorithm can be parallelized
-to take advantage of multiple cores.
+to take advantage of multiple cores. This implementation is parallelized using the
+C++17 standard threading mechanism. Even so, further optimization is possible.
