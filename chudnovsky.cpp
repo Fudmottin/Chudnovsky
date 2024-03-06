@@ -43,8 +43,14 @@ cpp_int pow_3k(int64_t k) {
     cpp_int ret = 1;
     int64_t exponent = 3 * k;
 
-    for (int64_t i = 0; i < exponent; ++i)
-        ret *= base;
+    while (exponent > 0) {
+        if (exponent & 1)
+            ret *= base;
+
+        base *= base;
+    
+        exponent >>= 1;
+    }
 
     return ret;
 }
