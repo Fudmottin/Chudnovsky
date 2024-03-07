@@ -1,7 +1,7 @@
 # Chudnovsky Algorithm for Calculating Pi
 
 This program calculates the value of Pi using the [Chudnovsky algorithm](https://en.wikipedia.org/wiki/Chudnovsky_algorithm),
-an extremely fast method to calculate the digits of π. It was published by the Chudnovsky brothers in 1987.
+an extremely fast method to calculate the digits of π. It was published by the Chudnovsky brothers in 1988.
 
 ## Prerequisites
 
@@ -11,6 +11,8 @@ The program requires two libraries:
 2. **MPFR:** A library for multiple-precision floating-point computations with correct rounding. You can download it from [here](http://www.mpfr.org/mpfr-current/#download).
 
 Make sure to install these libraries before compiling and running the program. Both packages are also available on [brew.sh](https://brew.sh).
+
+These libraries are used for the high precision computation required to compute many digits of π.
 
 ## How To Compile The Program?
 You need a compiler that supports C++20 standard because this code uses features introduced in this version.
@@ -26,7 +28,8 @@ Big Sur. Whatever. Who cares? It's different and it's annoying!
 To run the program, you should pass one argument which is the number of terms to be computed in the series.
 Usage example: `./chudnovsky 10` 
 
-It will compute Pi up to 10 terms.
+It will compute Pi up to 10 terms. Don't confuse terms for digits. You will get many more digits
+for each term. Term refers to the series used. Each term produces aproximately 14 decimal digits.
 
 The output will display Pi computed up to `n` terms (where `n` was your input) and then print out a calculated approximation of Pi.
 
@@ -34,10 +37,6 @@ The output will display Pi computed up to `n` terms (where `n` was your input) a
 The Chudnovsky algorithm calculates 1/π as:
 
 ![12 Σ ((-1)^k * (6k)! * (545140134k + 13591409)) / ((3k)!(k!)^3 * (640320)^(3k+3/2))](https://github.com/Fudmottin/Chudnovsky/blob/main/chudnovsky.svg)
-
-Where the summation Σ is from k = 0 to ∞.
-
-The program uses Boost's multiprecision and special function libraries to calculate factorials and powers. It also uses MPFR for multiple-precision floating-point computations.
 
 ## Note
 
@@ -58,46 +57,39 @@ to compare the output of chudnovsky to the canonical π text to see where disagr
 begins.
 
 ```
-./chudnovsky 50 > pi.txt  0.00s user 0.00s system 75% cpu 0.007 total
-$ sh pi-diff.sh                                                                    
+$ time ./chudnovsky 10 > pi.txt
+./chudnovsky 10 > pi.txt  0.00s user 0.00s system 75% cpu 0.009 total
+$ sh pi-diff.sh
 cmp: EOF on pi.txt
-Difference found at position: 711
+Difference found at position: 144
 Displaying ten characters from each file starting five chars before the difference...
-           9   9   5   6   1   1   2   1   2   9                        
+           3   1   7   2   5   3   5   9   4   0
 
-           9   9   5   6   2   4   3   8   6   5                        
+           3   1   7   2   5   8   9   2   4   8
 
-$ wc -c pi.txt 
-     752 pi.txt
+$ time ./chudnovsky 20 > pi.txt
+./chudnovsky 20 > pi.txt  0.00s user 0.00s system 98% cpu 0.007 total
+$ sh pi-diff.sh
+cmp: EOF on pi.txt
+Difference found at position: 285
+Displaying ten characters from each file starting five chars before the difference...
+           4   8   2   1   3   3   9   3   6   0
+
+           4   8   2   1   3   4   5   1   8   1
+
 $ time ./chudnovsky 100 > pi.txt
-./chudnovsky 100 > pi.txt  0.01s user 0.00s system 84% cpu 0.014 total
-$ sh pi-diff.sh                 
+./chudnovsky 100 > pi.txt  0.03s user 0.01s system 371% cpu 0.009 total
+$ sh pi-diff.sh
 cmp: EOF on pi.txt
 Difference found at position: 1421
 Displaying ten characters from each file starting five chars before the difference...
-           0   9   3   4   1   7   2   1   6   4                        
+           0   0   9   3   4   1   7   2   1   6
 
-           0   9   3   4   9   4   4   5   8   6                        
-
-$ wc -c pi.txt                  
-    1502 pi.txt
-$ time ./chudnovsky 200 > pi.txt
-./chudnovsky 200 > pi.txt  0.04s user 0.00s system 95% cpu 0.045 total
-$ sh pi-diff.sh                 
-cmp: EOF on pi.txt
-Difference found at position: 2838
-Displaying ten characters from each file starting five chars before the difference...
-           8   4   7   8   4   8   9   6   8   3                        
-
-           8   4   7   8   5   2   7   1   0   4                        
-
-$ wc -c pi.txt                  
-    3002 pi.txt
+           0   0   9   3   4   9   4   4   5   8
 ```
+
 As you can see, there is a point where the digits are start to be just plain wrong.
-that's just the nature of this implementation. Still, it was fun to write. Debugging
-was a bit of a challenge. Integer overflows do terrible things! If you follow the
-link to the wikipedia page, you will see that there is more room for optimization.
-Not only can the number of operations be reduced, the algorithm can be parallelized
-to take advantage of multiple cores. This implementation is parallelized using the
-C++17 standard threading mechanism. Even so, further optimization is possible.
+that's just the nature of this implementation. If you follow the link to the wikipedia
+page, you will see that there is more room for optimization. This implementation is
+parallelized using std::thread.
+
