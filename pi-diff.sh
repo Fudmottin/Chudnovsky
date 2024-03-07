@@ -9,7 +9,7 @@ diff_pos=$(cmp -l $file1 $file2 | awk 'NR==1{print $1}')
 
 if [[ -n $diff_pos ]]; then
     # Decrement diff_pos by 5 to start displaying characters 5 positions before the difference
-    let "start_pos=$diff_pos-5 > 0 ? $diff_pos-5 : 0"
+    let "start_pos=$diff_pos-6 > 0 ? $diff_pos-6 : 0"
 
     # Display ten characters from each file starting from start_pos
     echo "Difference found at position: $diff_pos"
