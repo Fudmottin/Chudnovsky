@@ -57,7 +57,6 @@ to compare the output of chudnovsky to the canonical π text to see where disagr
 begins.
 
 ```
-./chudnovsky 4000 > pi.txt  890.77s user 5.53s system 1588% cpu 56.433 total
 $ time ./chudnovsky 100 > pi.txt
 ./chudnovsky 100 > pi.txt  0.03s user 0.01s system 360% cpu 0.010 total
 $ sh pi-diff.sh
@@ -103,5 +102,5 @@ Displaying ten characters from each file starting five chars before the differen
 As you can see, there is a point where the digits are start to be just plain wrong.
 that's just the nature of this implementation. If you follow the link to the wikipedia
 page, you will see that there is more room for optimization. This implementation is
-parallelized using std::future.
+parallelized using std::future<mpfr_float>.
 
