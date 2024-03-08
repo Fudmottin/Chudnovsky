@@ -55,7 +55,7 @@ cpp_int denominator_b(int64_t k) {
 }
 
 int calcPrecision(int num_terms) {
-    const int PLACES_PER_TERM = 15;
+    const int PLACES_PER_TERM = 14;
 
     return num_terms * PLACES_PER_TERM;
 }
