@@ -57,39 +57,51 @@ to compare the output of chudnovsky to the canonical π text to see where disagr
 begins.
 
 ```
-$ time ./chudnovsky 10 > pi.txt
-./chudnovsky 10 > pi.txt  0.00s user 0.00s system 75% cpu 0.009 total
-$ sh pi-diff.sh
-cmp: EOF on pi.txt
-Difference found at position: 144
-Displaying ten characters from each file starting five chars before the difference...
-           3   1   7   2   5   3   5   9   4   0
-
-           3   1   7   2   5   8   9   2   4   8
-
-$ time ./chudnovsky 20 > pi.txt
-./chudnovsky 20 > pi.txt  0.00s user 0.00s system 98% cpu 0.007 total
-$ sh pi-diff.sh
-cmp: EOF on pi.txt
-Difference found at position: 285
-Displaying ten characters from each file starting five chars before the difference...
-           4   8   2   1   3   3   9   3   6   0
-
-           4   8   2   1   3   4   5   1   8   1
-
+./chudnovsky 4000 > pi.txt  890.77s user 5.53s system 1588% cpu 56.433 total
 $ time ./chudnovsky 100 > pi.txt
-./chudnovsky 100 > pi.txt  0.03s user 0.01s system 371% cpu 0.009 total
+./chudnovsky 100 > pi.txt  0.03s user 0.01s system 360% cpu 0.010 total
 $ sh pi-diff.sh
 cmp: EOF on pi.txt
-Difference found at position: 1421
+Difference found at position: 1401
 Displaying ten characters from each file starting five chars before the difference...
-           0   0   9   3   4   1   7   2   1   6
+           6   9   9   2   2   7   9   6   7   8
 
-           0   0   9   3   4   9   4   4   5   8
+           6   9   9   2   2   8  \n
+
+$ time ./chudnovsky 200 > pi.txt
+./chudnovsky 200 > pi.txt  0.16s user 0.02s system 944% cpu 0.018 total
+$ sh pi-diff.sh
+cmp: EOF on pi.txt
+Difference found at position: 2802
+Displaying ten characters from each file starting five chars before the difference...
+           7   9   9   3   4   4   0   3   7   4
+
+           7   9   9   3   4  \n
+
+$ time ./chudnovsky 400 > pi.txt
+./chudnovsky 400 > pi.txt  1.01s user 0.06s system 1396% cpu 0.077 total
+$ sh pi-diff.sh
+cmp: EOF on pi.txt
+Difference found at position: 5601
+Displaying ten characters from each file starting five chars before the difference...
+           7   7   1   0   9   8   7   0   4   0
+
+           7   7   1   0   9   9  \n
+
+$ time ./chudnovsky 800 > pi.txt
+./chudnovsky 800 > pi.txt  6.99s user 0.28s system 1527% cpu 0.476 total
+$ sh pi-diff.sh
+cmp: EOF on pi.txt
+Difference found at position: 11202
+Displaying ten characters from each file starting five chars before the difference...
+           0   1   9   9   9   2   0   5   9   8
+
+           0   1   9   9   9  \n
+
 ```
 
 As you can see, there is a point where the digits are start to be just plain wrong.
 that's just the nature of this implementation. If you follow the link to the wikipedia
 page, you will see that there is more room for optimization. This implementation is
-parallelized using std::thread.
+parallelized using std::future.
 
