@@ -19,42 +19,29 @@ using boost::multiprecision::cpp_int;
 
 static const int LOG2_10 = 4;
 
-cpp_int factorial(const cpp_int& num) {
+inline cpp_int factorial(const cpp_int& num) {
     cpp_int fact = 1;
     for(cpp_int i = 1; i <= num; ++i)
         fact *= i;
     return fact;
 }
 
-cpp_int numerator(const cpp_int& k) {
+inline cpp_int numerator(const cpp_int& k) {
     auto six_k_fact = factorial(6*k);
     
     return (k & 1 ? -1 : 1) * six_k_fact * (545140134*k + 13591409);
 }
 
-cpp_int denominator_a(const cpp_int& k) {
+inline cpp_int denominator_a(const cpp_int& k) {
     auto factorial_k = factorial(k);
     return factorial(3*k) * factorial_k * factorial_k * factorial_k;
 }
 
-cpp_int denominator_b(int64_t k) {
-    cpp_int base = 640320;
-    cpp_int ret = 1;
-    int64_t exponent = 3 * k;
-
-    while (exponent > 0) {
-        if (exponent & 1)
-            ret *= base;
-
-        base *= base;
-    
-        exponent >>= 1;
-    }
-
-    return ret;
+inline cpp_int denominator_b (int64_t k) {
+    return boost::multiprecision::pow(cpp_int(640320), k * 3);
 }
 
-int calcPrecision(int num_terms) {
+inline int calcPrecision(int num_terms) {
     const int PLACES_PER_TERM = 14;
 
     return num_terms * PLACES_PER_TERM;
