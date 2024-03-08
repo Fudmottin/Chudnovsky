@@ -10,15 +10,14 @@
 #include <iomanip>
 #include <string>
 #include <cmath>
-#include <mutex>
-#include <thread>
+#include <future>
 #include <vector>
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/multiprecision/mpfr.hpp>
 
 using boost::multiprecision::cpp_int;
 
-static const int log2n = 4;
+static const int LOG2_10 = 4;
 
 cpp_int factorial(const cpp_int& num) {
     cpp_int fact = 1;
@@ -38,7 +37,7 @@ cpp_int denominator_a(const cpp_int& k) {
     return factorial(3*k) * factorial_k * factorial_k * factorial_k;
 }
 
-cpp_int pow_3k(int64_t k) {
+cpp_int denominator_b(int64_t k) {
     cpp_int base = 640320;
     cpp_int ret = 1;
     int64_t exponent = 3 * k;
@@ -64,7 +63,7 @@ int calcPrecision(int num_terms) {
 // Function to calculate multiple of sigma series with required precision
 boost::multiprecision::mpfr_float calcConstant(int precision){
     using boost::multiprecision::mpfr_float;
-    mpfr_float::default_precision(precision * log2n);
+    mpfr_float::default_precision(precision * LOG2_10);
     mpfr_float numerator = 1;
     mpfr_float denominator_a = 426880;
     mpfr_float denominator_b_squared = 10005;
@@ -90,27 +89,27 @@ int main(int argc, char* argv[]) {
 
         using boost::multiprecision::mpfr_float;
         
-        mpfr_float::default_precision(precision * log2n);
+        mpfr_float::default_precision(precision * LOG2_10);
         mpfr_float constant = calcConstant(precision);
-        mpfr_float pi_inverse = 0;
-          
-        std::mutex mtx;
-        unsigned num_threads = std::thread::hardware_concurrency();
-        std::vector<std::thread> threads(num_threads);
+        std::vector<std::future<mpfr_float>> futures;
 
+        unsigned num_threads = std::thread::hardware_concurrency();
         for(unsigned i = 0; i < num_threads; ++i) {
-            threads[i] = std::thread([&, i] {
+            futures.push_back(std::async(std::launch::async, [&, i] {
+                mpfr_float local_sum = 0;
                 for(int64_t k = i; k < num_terms; k += num_threads) {
-                    mpfr_float temp = mpfr_float(numerator(k)) / mpfr_float(denominator_a(k) * pow_3k(k));
-                    mtx.lock(); 
-                    pi_inverse += temp;
-                    mtx.unlock(); 
+                    mpfr_float temp = mpfr_float(numerator(k)) /
+                                      mpfr_float(denominator_a(k) * denominator_b(k));
+                    local_sum += temp;
                 }
-            });
+        
+                return local_sum;
+            }));
         }
 
-        for(auto& th : threads)
-            th.join();
+        mpfr_float pi_inverse = 0;
+        for(auto& f : futures)
+            pi_inverse += f.get();
 
         mpfr_float pi = mpfr_float(1)/(pi_inverse * constant);
         
