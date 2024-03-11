@@ -17,6 +17,51 @@
 
 using boost::multiprecision::cpp_int;
 
+/*
+#include <unordered_map>
+#include <mutex>
+
+class CachedFactorial {
+    mutable std::mutex mutex;
+    mutable std::unordered_map<cpp_int, cpp_int> cache;
+    mutable cpp_int max_cached_key{0};
+public:
+    cpp_int factorial(const cpp_int& num) {
+        std::lock_guard<std::mutex> lock(mutex);
+        auto ret = cache.find(num);
+        if (ret == cache.end()) {
+            if (!cache.empty()) { // If cache is not empty
+                const cpp_int& largest_key = max_cached_key;
+                cpp_int fact = cache[largest_key];
+                for (cpp_int i = largest_key + 1; i <= num; ++i) {
+                    fact *= i;
+                    cache.insert({i, fact});
+                    max_cached_key = i; // Update maximum cached key
+                }
+                return fact;
+            } else { // If cache is empty
+                const cpp_int zero(0), one(1);
+                cache.insert({zero, one});
+                cache.insert({one, one});
+                max_cached_key = one; // Update maximum cached key
+
+                cpp_int fact = 1;
+                for(cpp_int i = 2; i <= num; ++i) {
+                    fact *= i;
+                    cache.insert({i, fact});
+                    max_cached_key = i; // Update maximum cached key
+               }
+               return fact;
+           }
+       }
+
+       return ret->second;
+   }
+};
+
+CachedFactorial cashed_factorial;
+*/
+
 static const int LOG2_10 = 4;
 
 inline cpp_int factorial(const cpp_int& num) {
@@ -26,15 +71,16 @@ inline cpp_int factorial(const cpp_int& num) {
     return fact;
 }
 
+
 inline cpp_int numerator(const cpp_int& k) {
-    auto six_k_fact = factorial(6*k);
+    auto six_k_fact = factorial(6 * k);
     
-    return (k & 1 ? -1 : 1) * six_k_fact * (545140134*k + 13591409);
+    return (k & 1 ? -1 : 1) * six_k_fact * (545140134 * k + 13591409);
 }
 
 inline cpp_int denominator_a(const cpp_int& k) {
     auto factorial_k = factorial(k);
-    return factorial(3*k) * factorial_k * factorial_k * factorial_k;
+    return factorial(3 * k) * factorial_k * factorial_k * factorial_k;
 }
 
 inline cpp_int denominator_b (int64_t k) {
