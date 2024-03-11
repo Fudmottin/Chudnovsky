@@ -21,7 +21,7 @@ static const int LOG2_10 = 4;
 
 inline cpp_int factorial(const cpp_int& num) {
     cpp_int fact = 1;
-    for(cpp_int i = 1; i <= num; ++i)
+    for(cpp_int i = 2; i <= num; ++i)
         fact *= i;
     return fact;
 }
