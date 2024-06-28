@@ -12,65 +12,46 @@
 #include <cmath>
 #include <future>
 #include <vector>
+#include <mutex>
+#include <stdexcept>
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/multiprecision/mpfr.hpp>
 
 using boost::multiprecision::cpp_int;
 
-/*
-#include <unordered_map>
-#include <mutex>
-
-class CachedFactorial {
-    mutable std::mutex mutex;
-    mutable std::unordered_map<cpp_int, cpp_int> cache;
-    mutable cpp_int max_cached_key{0};
-public:
-    cpp_int factorial(const cpp_int& num) {
-        std::lock_guard<std::mutex> lock(mutex);
-        auto ret = cache.find(num);
-        if (ret == cache.end()) {
-            if (!cache.empty()) { // If cache is not empty
-                const cpp_int& largest_key = max_cached_key;
-                cpp_int fact = cache[largest_key];
-                for (cpp_int i = largest_key + 1; i <= num; ++i) {
-                    fact *= i;
-                    cache.insert({i, fact});
-                    max_cached_key = i; // Update maximum cached key
-                }
-                return fact;
-            } else { // If cache is empty
-                const cpp_int zero(0), one(1);
-                cache.insert({zero, one});
-                cache.insert({one, one});
-                max_cached_key = one; // Update maximum cached key
-
-                cpp_int fact = 1;
-                for(cpp_int i = 2; i <= num; ++i) {
-                    fact *= i;
-                    cache.insert({i, fact});
-                    max_cached_key = i; // Update maximum cached key
-               }
-               return fact;
-           }
-       }
-
-       return ret->second;
-   }
-};
-
-CachedFactorial cashed_factorial;
-*/
-
 static const int LOG2_10 = 4;
 
+cpp_int factorial (const cpp_int& num) {
+    static std::mutex m;
+    static std::vector<cpp_int> f = { 1 };
+
+    if (num >= std::numeric_limits<int>::min() && num <= std::numeric_limits<int>::max()) {
+        int int_value = static_cast<int>(num);
+        std::lock_guard<std::mutex> lk(m);
+        if (int_value < f.size())
+            return f[int_value];
+        else {
+            auto fact = f.back();
+            for (auto i = f.size(); i <= int_value; ++i) {
+                fact *= i;
+                f.push_back(fact);
+            }
+            return fact;
+        }
+    } else
+        throw std::runtime_error("Factorial too large to compute.\n");
+
+    return -1; // shouldn't get here
+}
+
+/*
 inline cpp_int factorial(const cpp_int& num) {
     cpp_int fact = 1;
     for(cpp_int i = 2; i <= num; ++i)
         fact *= i;
     return fact;
 }
-
+*/
 
 inline cpp_int numerator(const cpp_int& k) {
     auto six_k_fact = factorial(6 * k);
