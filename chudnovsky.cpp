@@ -21,37 +21,34 @@ using boost::multiprecision::cpp_int;
 
 static const int LOG2_10 = 4;
 
-cpp_int factorial (const cpp_int& num) {
+cpp_int factorial(const cpp_int& num) {
     static std::mutex m;
-    static std::vector<cpp_int> f = { 1 };
+    static std::vector<cpp_int> f = {1}; 
 
-    if (num >= std::numeric_limits<int>::min() && num <= std::numeric_limits<int>::max()) {
-        int int_value = static_cast<int>(num);
-        std::lock_guard<std::mutex> lk(m);
-        if (int_value < f.size())
-            return f[int_value];
-        else {
-            auto fact = f.back();
-            for (auto i = f.size(); i <= int_value; ++i) {
-                fact *= i;
-                f.push_back(fact);
-            }
-            return fact;
-        }
-    } else
-        throw std::runtime_error("Factorial too large to compute.\n");
+    if (num < 0)
+        throw std::runtime_error("Factorial is undefined for negative numbers.");
 
-    return -1; // shouldn't get here
-}
+    std::lock_guard<std::mutex> lk(m);
 
-/*
-inline cpp_int factorial(const cpp_int& num) {
-    cpp_int fact = 1;
-    for(cpp_int i = 2; i <= num; ++i)
+    size_t index;
+    try {
+        index = num.convert_to<size_t>();
+    } catch (...) {
+        throw std::runtime_error("Factorial too large to compute.");
+    }
+
+    if (index < f.size())
+        return f[index];
+
+    f.reserve(index + 1);
+    cpp_int fact = f.back();
+    for (size_t i = f.size(); i <= index; ++i) {
         fact *= i;
-    return fact;
+        f.emplace_back(fact);
+    }
+
+    return f[index];
 }
-*/
 
 inline cpp_int numerator(const cpp_int& k) {
     auto six_k_fact = factorial(6 * k);
