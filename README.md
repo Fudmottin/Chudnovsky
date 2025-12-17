@@ -37,7 +37,9 @@ different and it's annoying!
 On Debian Linux use `c++ --std=c++20 -O3 -o chudnovsky chudnovsky.cpp -lmpfr
 -lgmp`.
 
-## Usage To run the program, you should pass one argument which is the number of
+## Usage
+
+To run the program, you should pass one argument which is the number of
 terms to be computed in the series.  Usage example: `./chudnovsky 10` 
 
 It will compute Pi up to 10 terms. Don't confuse terms for digits. You will get
@@ -47,7 +49,9 @@ produces aproximately 14 decimal digits.
 The output will display Pi computed up to `n` terms (where `n` was your input)
 and then print out a calculated approximation of Pi.
 
-## Algorithm Explanation The Chudnovsky algorithm calculates 1/π as:
+## Algorithm Explanation
+
+The Chudnovsky algorithm calculates 1/π as:
 
 ![12 Σ ((-1)^k * (6k)! * (545140134k + 13591409)) / ((3k)!(k!)^3 *
 (640320)^(3k+3/2))](https://github.com/Fudmottin/Chudnovsky/blob/main/chudnovsky.svg)
