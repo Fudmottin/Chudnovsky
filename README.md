@@ -22,8 +22,9 @@ Both packages are also available on [brew.sh](https://brew.sh).
 These libraries are used for the high precision computation required to compute
 many digits of π.
 
-## How To Compile The Program?  You need a compiler that supports C++20 standard
-because this code uses features introduced in this version.  Here is an example
+## How To Compile The Program?
+You need a compiler that supports C++20 standard because this code uses
+features introduced in this version.  Here is an example
 compile line: `c++ -std=c++20 -O3 -o chudnovsky chudnovsky.cpp
 -L/usr/local/opt/mpfr/lib/ -lmpfr` This was used on my i9 MacBook Pro.
 
